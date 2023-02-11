@@ -1,4 +1,4 @@
-package com.example.cocktailsappspil.rest.model
+package com.example.cocktailsappspil.rest.model.drinks
 
 
 import com.squareup.moshi.Json
