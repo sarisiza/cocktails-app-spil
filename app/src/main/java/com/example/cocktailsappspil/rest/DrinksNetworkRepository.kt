@@ -8,6 +8,7 @@ import com.example.cocktailsappspil.rest.model.ingredients.IngredientsResponse
 import com.example.cocktailsappspil.utils.*
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import javax.inject.Inject
 
 /**
  * Defines the functions to get information from the database
@@ -22,7 +23,7 @@ interface DrinksNetworkRepository {
 
 }
 
-class DrinksNetworkRepositoryImpl(
+class DrinksNetworkRepositoryImpl @Inject constructor(
     private val drinksApi: DrinksApi
 ): DrinksNetworkRepository{
 
