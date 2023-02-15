@@ -40,17 +40,17 @@ interface DrinksApi {
 
     @GET(FILTER)
     suspend fun getDrinksByGlass(
-        @Query("g") ingredient: String
+        @Query("g") glass: String
     ): Response<DrinksResponse>
 
     @GET(FILTER)
     suspend fun getDrinksByAlcoholic(
-        @Query("a") ingredient: String
+        @Query("a") alcoholic: String
     ): Response<DrinksResponse>
 
     @GET(FILTER)
     suspend fun getDrinksByCategory(
-        @Query("c") ingredient: String
+        @Query("c") category: String
     ): Response<DrinksResponse>
 
     @GET(FILTER_LIST)
