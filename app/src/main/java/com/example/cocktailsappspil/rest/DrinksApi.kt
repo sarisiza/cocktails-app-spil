@@ -31,11 +31,6 @@ interface DrinksApi {
         @Query("s") drinkName: String
     ): Response<DrinksResponse>
 
-    @GET(LOOKUP)
-    suspend fun getDrinkById(
-        @Query("i") id: String
-    ): Response<DrinksResponse>
-
     @GET(FILTER_LIST)
     suspend fun getCategoryList(
         @Query("c") list: String = "list"
@@ -61,7 +56,6 @@ interface DrinksApi {
         const val BASE_URL = "www.thecocktaildb.com/api/json/v1/1/"
         const val FILTER = "filter.php"
         const val SEARCH = "search.php"
-        const val LOOKUP = "lookup.php"
         const val FILTER_LIST = "list.php"
     }
 
