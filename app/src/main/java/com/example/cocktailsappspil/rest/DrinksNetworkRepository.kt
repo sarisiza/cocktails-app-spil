@@ -15,8 +15,13 @@ import javax.inject.Inject
  */
 interface DrinksNetworkRepository {
 
+    fun getDrinksByAlcohol(alcohol: String): Flow<UIState<List<Drink>>>
+
     fun getDrinksByName(drinkName: String): Flow<UIState<List<Drink>>>
-    fun getFilterList(filterType: FilterType): Flow<UIState<List<Filter>>>
+
+    fun getDrinksById(drinkId: String): Flow<UIState<Drink>>
+
+//    fun getFilterList(filterType: FilterType): Flow<UIState<List<Filter>>>
 
 }
 
@@ -25,17 +30,13 @@ class DrinksNetworkRepositoryImpl @Inject constructor(
 ): DrinksNetworkRepository{
 
 
-    override fun getDrinksByName(drinkName: String): Flow<UIState<List<Drink>>> = flow {
+    override fun getDrinksByAlcohol(alcohol: String): Flow<UIState<List<Drink>>> = flow {
         emit(UIState.LOADING)
         try {
-            val response = drinksApi.getDrinksByName(drinkName)
+            val response = drinksApi.getDrinksByAlcoholic(alcohol)
             if(response.isSuccessful){
                 response.body()?.let {
-                    val drinksList = mutableListOf<Drink>()
-                    it.drinks?.forEach {
-                        drinksList.add(it.mapToDrink())
-                    }
-                    emit(UIState.SUCCESS(drinksList))
+                    emit(UIState.SUCCESS(it.drinks.mapToDrink()))
                 } ?: throw NullResponseException("Drink list is null")
             } else throw ResponseFailureException("Could not connect to random drink API")
         } catch (e: Exception){
@@ -43,7 +44,36 @@ class DrinksNetworkRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun getFilterList(filterType: FilterType): Flow<UIState<List<Filter>>> = flow {
+    override fun getDrinksByName(drinkName: String): Flow<UIState<List<Drink>>> = flow {
+        emit(UIState.LOADING)
+        try {
+            val response = drinksApi.getDrinksByName(drinkName)
+            if(response.isSuccessful){
+                response.body()?.let {
+                    emit(UIState.SUCCESS(it.drinks.mapToDrink()))
+                } ?: throw NullResponseException("Drink list is null")
+            } else throw ResponseFailureException("Could not connect to random drink API")
+        } catch (e: Exception){
+            emit(UIState.ERROR(e))
+        }
+    }
+
+    override fun getDrinksById(drinkId: String): Flow<UIState<Drink>> = flow {
+        emit(UIState.LOADING)
+        try {
+            val response = drinksApi.getDrinkById(drinkId)
+            if(response.isSuccessful){
+                response.body()?.let {
+                    emit(UIState.SUCCESS(it.drinks.mapToDrink()[0]))
+                } ?: throw NullResponseException("Drink list is null")
+            } else throw ResponseFailureException("Could not connect to random drink API")
+        } catch (e: Exception){
+            emit(UIState.ERROR(e))
+        }
+    }
+
+    //for filters
+/*    override fun getFilterList(filterType: FilterType): Flow<UIState<List<T>>> = flow {
         try {
             val response = when(filterType){
                 FilterType.ALCOHOLIC ->
@@ -57,11 +87,11 @@ class DrinksNetworkRepositoryImpl @Inject constructor(
             }
             if(response.isSuccessful){
                 response.body()?.let {
-                    val filtersList = mutableListOf<Filter>()
+                    val filtersList = mutableListOf<T>()
                     when(filterType){
                         FilterType.ALCOHOLIC ->
                             (it as AlcoholicResponse).drinks?.forEach {
-                                filtersList.add(it as Filter)
+                                filtersList.add(it as T)
                             }
                         FilterType.INGREDIENT ->
                             (it as IngredientsResponse).drinks?.forEach {
@@ -82,6 +112,6 @@ class DrinksNetworkRepositoryImpl @Inject constructor(
         } catch (e: Exception){
             emit(UIState.ERROR(e))
         }
-    }
+    }*/
 
 }

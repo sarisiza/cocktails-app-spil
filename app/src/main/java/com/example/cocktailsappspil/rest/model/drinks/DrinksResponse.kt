@@ -9,5 +9,5 @@ import com.squareup.moshi.JsonClass
 @JsonClass(generateAdapter = true)
 data class DrinksResponse(
     @Json(name = "drinks")
-    val drinks: List<DrinkResult?>? = null
+    val drinks: List<DrinkResult>? = null
 )
