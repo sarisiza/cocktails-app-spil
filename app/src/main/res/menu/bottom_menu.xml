@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:title="@string/it_title_home"
+        android:id="@+id/home_fragment"
+        android:icon="@drawable/ic_home_24"/>
+
+    <item
+        android:title="@string/it_title_filter"
+        android:id="@+id/filter_fragment"
+        android:icon="@drawable/ic_filter_24"/>
+
+    <item
+        android:title="@string/it_title_favorites"
+        android:id="@+id/favorite_fragment"
+        android:icon="@drawable/ic_favorite_24"/>
+
+</menu>
