@@ -15,10 +15,7 @@ import javax.inject.Inject
  */
 interface DrinksNetworkRepository {
 
-    fun getRandomDrink(): Flow<UIState<Drink>>
-    fun searchDrinksByName(drinkName: String): Flow<UIState<List<Drink>>>
-    fun getDrinkById(drinkId: String): Flow<UIState<Drink>>
-    fun getDrinksWithFilter(filter: Filter): Flow<UIState<List<Drink>>>
+    fun getDrinksByName(drinkName: String): Flow<UIState<List<Drink>>>
     fun getFilterList(filterType: FilterType): Flow<UIState<List<Filter>>>
 
 }
@@ -27,64 +24,11 @@ class DrinksNetworkRepositoryImpl @Inject constructor(
     private val drinksApi: DrinksApi
 ): DrinksNetworkRepository{
 
-    override fun getRandomDrink(): Flow<UIState<Drink>> = flow{
-        emit(UIState.LOADING)
-        try {
-            val response = drinksApi.getRandomDrink()
-            if(response.isSuccessful){
-                response.body()?.let {
-                    emit(UIState.SUCCESS(it.drinks?.get(0).mapToDrink()))
-                } ?: throw NullResponseException("Random drink is null")
-            } else throw ResponseFailureException("Could not connect to random drink API")
-        } catch (e: Exception){
-            emit(UIState.ERROR(e))
-        }
-    }
 
-    override fun searchDrinksByName(drinkName: String): Flow<UIState<List<Drink>>> = flow {
+    override fun getDrinksByName(drinkName: String): Flow<UIState<List<Drink>>> = flow {
         emit(UIState.LOADING)
         try {
             val response = drinksApi.getDrinksByName(drinkName)
-            if(response.isSuccessful){
-                response.body()?.let {
-                    val drinksList = mutableListOf<Drink>()
-                    it.drinks?.forEach {
-                        drinksList.add(it.mapToDrink())
-                    }
-                    emit(UIState.SUCCESS(drinksList))
-                } ?: throw NullResponseException("Drink list is null")
-            } else throw ResponseFailureException("Could not connect to random drink API")
-        } catch (e: Exception){
-            emit(UIState.ERROR(e))
-        }
-    }
-
-    override fun getDrinkById(drinkId: String): Flow<UIState<Drink>> = flow{
-        emit(UIState.LOADING)
-        try {
-            val response = drinksApi.getDrinkById(drinkId)
-            if(response.isSuccessful){
-                response.body()?.let {
-                    emit(UIState.SUCCESS(it.drinks?.get(0).mapToDrink()))
-                } ?: throw NullResponseException("Drink is null")
-            } else throw ResponseFailureException("Could not connect to random drink API")
-        } catch (e: Exception){
-            emit(UIState.ERROR(e))
-        }
-    }
-
-    override fun getDrinksWithFilter(filter: Filter): Flow<UIState<List<Drink>>> = flow{
-        try {
-            val response = when(filter){
-                is Filter.ALCOHOLIC_FILTER ->
-                    drinksApi.getDrinksByAlcoholic(filter.filter.alcoholicName?:"")
-                is Filter.CATEGORY_FILTER ->
-                    drinksApi.getDrinksByCategory(filter.filter.categoryName?:"")
-                is Filter.GLASS_FILTER ->
-                    drinksApi.getDrinksByGlass(filter.filter.glassName?:"")
-                is Filter.INGREDIENT_FILTER ->
-                    drinksApi.getDrinksByIngredient(filter.filter.ingredientName?:"")
-            }
             if(response.isSuccessful){
                 response.body()?.let {
                     val drinksList = mutableListOf<Drink>()
@@ -117,19 +61,19 @@ class DrinksNetworkRepositoryImpl @Inject constructor(
                     when(filterType){
                         FilterType.ALCOHOLIC ->
                             (it as AlcoholicResponse).drinks?.forEach {
-                                filtersList.add(it.mapAlcoholic() as Filter)
+                                filtersList.add(it as Filter)
                             }
                         FilterType.INGREDIENT ->
                             (it as IngredientsResponse).drinks?.forEach {
-                                filtersList.add(it.mapIngredient() as Filter)
+                                filtersList.add(it as Filter)
                             }
                         FilterType.GLASS ->
                             (it as GlassesResponse).drinks?.forEach {
-                                filtersList.add(it.mapGlass() as Filter)
+                                filtersList.add(it as Filter)
                             }
                         FilterType.CATEGORY ->
                             (it as CategoriesResponse).drinks?.forEach {
-                                filtersList.add(it.mapCategory() as Filter)
+                                filtersList.add(it as Filter)
                             }
                     }
                     emit(UIState.SUCCESS(filtersList))

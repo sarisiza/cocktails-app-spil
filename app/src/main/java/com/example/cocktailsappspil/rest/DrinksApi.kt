@@ -20,8 +20,6 @@ interface DrinksApi {
     /**
      * Methods to get information from the API
      */
-    @GET(RANDOM_DRINK)
-    suspend fun getRandomDrink(): Response<DrinksResponse>
 
     @GET(SEARCH)
     suspend fun getDrinksByName(
@@ -31,26 +29,6 @@ interface DrinksApi {
     @GET(LOOKUP)
     suspend fun getDrinkById(
         @Query("i") id: String
-    ): Response<DrinksResponse>
-
-    @GET(FILTER)
-    suspend fun getDrinksByIngredient(
-        @Query("i") ingredient: String
-    ): Response<DrinksResponse>
-
-    @GET(FILTER)
-    suspend fun getDrinksByGlass(
-        @Query("g") glass: String
-    ): Response<DrinksResponse>
-
-    @GET(FILTER)
-    suspend fun getDrinksByAlcoholic(
-        @Query("a") alcoholic: String
-    ): Response<DrinksResponse>
-
-    @GET(FILTER)
-    suspend fun getDrinksByCategory(
-        @Query("c") category: String
     ): Response<DrinksResponse>
 
     @GET(FILTER_LIST)
@@ -76,11 +54,9 @@ interface DrinksApi {
     //Define the API parameters
     companion object{
         const val BASE_URL = "www.thecocktaildb.com/api/json/v1/1/"
-        const val RANDOM_DRINK = "random.php"
         const val SEARCH = "search.php"
         const val LOOKUP = "lookup.php"
         const val FILTER_LIST = "list.php"
-        const val FILTER = "filter.php"
     }
 
 }
