@@ -5,14 +5,14 @@ package com.example.cocktailsappspil.utils
  */
 sealed class ViewIntent{
 
-    object SEARCH_DRINK: ViewIntent()
+    data class SEARCH(val drinkName: String): ViewIntent()
 
-    object RANDOM_DRINK: ViewIntent()
+    object RANDOM: ViewIntent()
 
-    object DETAILS_DRINK: ViewIntent()
+    data class DETAILS(val drinkId: String): ViewIntent()
 
-    object FILTER_DRINK: ViewIntent()
+    object FILTER: ViewIntent()
 
-    object FAVORITE_DRINK: ViewIntent()
+    object FAVORITE: ViewIntent()
 
 }

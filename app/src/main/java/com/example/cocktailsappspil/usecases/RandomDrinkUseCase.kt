@@ -8,14 +8,14 @@ import com.example.cocktailsappspil.utils.UIState
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-class DrinkByNameUseCase @Inject constructor(
+class RandomDrinkUseCase @Inject constructor(
     private val drinksNetworkRepository: DrinksNetworkRepository,
     private val networkState: NetworkState
-){
+) {
 
-    fun getDrinksByName(name: String): Flow<UIState<List<Drink>>>{
+    fun getRandomDrinks(): Flow<UIState<List<Drink>>>{
         return if(networkState.isInternetOn()){
-            drinksNetworkRepository.getDrinksByName(name)
+            drinksNetworkRepository.getDrinksByAlcohol("Alcoholic")
         } else throw NoConnectionException()
     }
 

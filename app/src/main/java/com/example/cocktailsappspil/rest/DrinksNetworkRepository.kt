@@ -19,8 +19,6 @@ interface DrinksNetworkRepository {
 
     fun getDrinksByName(drinkName: String): Flow<UIState<List<Drink>>>
 
-    fun getDrinksById(drinkId: String): Flow<UIState<Drink>>
-
 //    fun getFilterList(filterType: FilterType): Flow<UIState<List<Filter>>>
 
 }
@@ -51,20 +49,6 @@ class DrinksNetworkRepositoryImpl @Inject constructor(
             if(response.isSuccessful){
                 response.body()?.let {
                     emit(UIState.SUCCESS(it.drinks.mapToDrink()))
-                } ?: throw NullResponseException("Drink list is null")
-            } else throw ResponseFailureException("Could not connect to random drink API")
-        } catch (e: Exception){
-            emit(UIState.ERROR(e))
-        }
-    }
-
-    override fun getDrinksById(drinkId: String): Flow<UIState<Drink>> = flow {
-        emit(UIState.LOADING)
-        try {
-            val response = drinksApi.getDrinkById(drinkId)
-            if(response.isSuccessful){
-                response.body()?.let {
-                    emit(UIState.SUCCESS(it.drinks.mapToDrink()[0]))
                 } ?: throw NullResponseException("Drink list is null")
             } else throw ResponseFailureException("Could not connect to random drink API")
         } catch (e: Exception){
